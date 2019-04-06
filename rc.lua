@@ -39,7 +39,7 @@ naughty.config.defaults.position = "top_right"
 naughty.config.defaults.margin = 8
 naughty.config.defaults.gap = 1
 naughty.config.defaults.ontop = true
-naughty.config.defaults.font = "Meslo LGS Regular 10"
+naughty.config.defaults.font = "Tamzen 10"
 naughty.config.defaults.icon = nil
 naughty.config.defaults.icon_size = 32
 naughty.config.defaults.fg = beautiful.fg_tooltip
@@ -224,7 +224,7 @@ chrome_button:buttons(awful.util.table.join(
 local cpu_icon = wibox.widget.imagebox(beautiful.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(space3 .. cpu_now.usage .. "%" .. markup.font("Tamsyn 4", " "))
+        widget:set_markup(space3 .. cpu_now.usage .. "%" .. markup.font("Tamzen 4", " "))
     end
 })
             
@@ -235,7 +235,7 @@ cpu_widget.bgimage=beautiful.widget_display
 local mem_icon = wibox.widget.imagebox(beautiful.widget_mem)
 local mem = lain.widget.mem({
     settings = function()
-        widget:set_markup(space3 .. mem_now.used .. "MB" .. markup.font("Tamsyn 4", " "))
+        widget:set_markup(space3 .. mem_now.used .. "MB" .. markup.font("Tamzen 4", " "))
     end
 })
 local mem_widget = wibox.container.background(mem.widget)
@@ -499,36 +499,15 @@ function connect(s)
       },
       s.mytasklist, -- Middle widget
       --nil,
-      { -- Right widgets
+      s.index == 1 and { -- Right widgets
           layout = wibox.layout.fixed.horizontal,
           s.mypromptbox,
-          wibox.widget.systray(),
           spr5px,
           spr,
           widget_display_l,
           -- kbd_widget,
           widget_display_r,
           spr,
-          spr5px,
-          -- MPD widget
-          spr,
-          prev_icon,
-          spr,
-          stop_icon,
-          spr,
-          play_pause_icon,
-          spr,
-          next_icon,
-          mpd_sepl,
-          music_widget,
-          mpd_sepr,
-          spr5px,
-          -- Mail widget
-          spr,
-          mail_icon,
-          widget_display_l,
-          mail_widget,
-          widget_display_r,
           spr5px,
           -- CPU widget
           spr,
@@ -567,6 +546,7 @@ function connect(s)
           bat_widget,
           widget_display_r,
           spr5px,
+          wibox.widget.systray(),
           -- Clock
           spr,
           clock_icon,
@@ -577,7 +557,10 @@ function connect(s)
           spr,
           -- Layout box
           s.mylayoutbox,
-      },
+      } or {
+          layout = wibox.layout.fixed.horizontal,
+          s.mylayoutbox
+        },
   }
 end
 
@@ -716,6 +699,10 @@ globalkeys = awful.util.table.join(
     -- begin viv additions
     awful.key({ modkey,           }, "g", function () awful.spawn("env MOZ_USE_XINPUT2=1 firefox") end,
 {description = "open a browser", group = "launcher"}),
+
+    awful.key({ modkey,           }, "e", function () awful.spawn("thunar") end,
+{description = "file browser", group = "launcher"}),
+
 
     awful.key({ modkey, "Shift"   }, "s", function () awful.spawn.with_shell("sleep 0.2; /home/vivlim/bin/cap") end,
 {description = "screencap", group = "launcher"}),
